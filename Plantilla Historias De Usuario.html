@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🧩 Lienzo: Plantilla de Historias de Usuario (Ajustada)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="description" content="Lienzo interactivo para crear historias de usuario (INVEST), con importación por drag & drop, exportación y borrado ubicados en el Backlog. Título dentro de main." />
+  <style>
+    @media print { .no-print { display:none!important; } }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+  <!-- Header / Nav (se mantiene sólo la barra de navegación del toolkit) -->
+  <header class="bg-white/80 backdrop-blur sticky top-0 z-50 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="./index.html" class="flex items-center gap-3">
+        <span class="text-2xl">🧰</span>
+        <h1 class="text-xl md:text-2xl font-bold tracking-tight">UX Toolkit</h1>
+      </a>
+      <nav class="no-print">
+        <ul class="flex items-center gap-2 md:gap-3">
+          <li><a class="px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-100" href="./index.html">Inicio</a></li>
+          <li><a class="px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-100" href="./Plantilla Historias De Usuario.html">Historias</a></li>
+          <li><a class="px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-100" href="./Plantilla Lineas de Tiempo UX.html">Línea de tiempo</a></li>
+          <li><a class="px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-100" href="./Plantilla Viajes de Usuario.html">Viajes</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 grid lg:grid-cols-3 gap-6">
+    <!-- Título dentro de main + acciones generales impresiones -->
+    <section class="lg:col-span-3">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+          <h2 class="text-2xl md:text-3xl font-bold tracking-tight">🧩 Plantilla de Historias de Usuario</h2>
+          <div class="flex gap-2 no-print">
+            <button id="printBtn" class="px-3 py-2 rounded-xl bg-slate-800 text-white hover:bg-black text-sm font-semibold" title="Imprime o guarda en PDF el backlog y los detalles.">Imprimir</button>
+          </div>
+        </div>
+        <div class="px-5 py-4 text-sm text-slate-600">
+          <p>Usa el formulario para agregar historias y el <em>Backlog</em> para gestionarlas. Puedes importar historias con <strong>arrastrar y soltar</strong> un archivo <code>.json</code> sobre la zona indicada.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Formulario -->
+    <section class="lg:col-span-2">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+          <h3 class="text-xl font-semibold">Crear Historia de Usuario</h3>
+          <span class="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-600" title="Marco INVEST: Independiente, Negociable, Valiosa, Estimable, Pequeña y Testeable.">INVEST</span>
+        </div>
+        <form id="storyForm" class="p-5 grid md:grid-cols-2 gap-4">
+          <div class="md:col-span-1">
+            <label class="block text-sm font-medium mb-1" for="persona">Como (usuario / persona)</label>
+            <input id="persona" name="persona" type="text" required placeholder="Viajero frecuente / Estudiante / Administrador" class="w-full rounded-xl border-slate-300 focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div class="md:col-span-1">
+            <label class="block text-sm font-medium mb-1" for="accion">Quiero (acción)</label>
+            <input id="accion" name="accion" type="text" required placeholder="reservar un vuelo / generar un reporte" class="w-full rounded-xl border-slate-300 focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium mb-1" for="beneficio">Para (beneficio)</label>
+            <input id="beneficio" name="beneficio" type="text" required placeholder="ahorrar tiempo y evitar errores" class="w-full rounded-xl border-slate-300 focus:ring-2 focus:ring-indigo-500" />
+          </div>
+
+          <div class="md:col-span-2">
+            <div class="flex items-center justify-between">
+              <label class="block text-sm font-medium mb-1" for="criterios">Criterios de aceptación</label>
+              <button type="button" id="insertGWT" class="no-print text-xs px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200" title="Inserta Dado/Cuando/Entonces">Insertar Dado/Cuando/Entonces</button>
+            </div>
+            <textarea id="criterios" name="criterios" rows="5" placeholder="Dado que ...&#10;Cuando ...&#10;Entonces ..." class="w-full rounded-xl border-slate-300 focus:ring-2 focus:ring-indigo-500"></textarea>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 md:col-span-2">
+            <div>
+              <label class="block text-sm font-medium mb-1" for="prioridad">Prioridad</label>
+              <select id="prioridad" name="prioridad" class="w-full rounded-xl border-slate-300 focus:ring-2 focus:ring-indigo-500">
+                <option>Obligatorio (Must Have)</option>
+                <option>Importante (Should Have)</option>
+                <option>Opcional (Could Have)</option>
+                <option>No en esta versión (Won't Have)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1" for="puntos">Tamaño (Puntos de Historia)</label>
+              <input id="puntos" name="puntos" type="number" min="1" step="1" placeholder="3" class="w-full rounded-xl border-slate-300 focus:ring-2 focus:ring-indigo-500" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 md:col-span-2">
+            <div>
+              <label class="block text-sm font-medium mb-1" for="epica">Épica</label>
+              <input id="epica" name="epica" type="text" placeholder="Reserva / Pagos / Perfil" class="w-full rounded-xl border-slate-300 focus:ring-2 focus:ring-indigo-500" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1" for="estado">Estado</label>
+              <select id="estado" name="estado" class="w-full rounded-xl border-slate-300 focus:ring-2 focus:ring-indigo-500">
+                <option>Pendiente</option>
+                <option>En progreso</option>
+                <option>Hecha</option>
+              </select>
+            </div>
+          </div>
+
+          <fieldset class="md:col-span-2 border border-slate-200 rounded-xl p-4">
+            <legend class="text-sm font-semibold px-2">Checklist INVEST</legend>
+            <div class="grid md:grid-cols-3 gap-2 text-sm">
+              <label class="inline-flex items-center gap-2"><input type="checkbox" id="invI" class="rounded"> Independiente</label>
+              <label class="inline-flex items-center gap-2"><input type="checkbox" id="invN" class="rounded"> Negociable</label>
+              <label class="inline-flex items-center gap-2"><input type="checkbox" id="invV" class="rounded"> Valiosa</label>
+              <label class="inline-flex items-center gap-2"><input type="checkbox" id="invE" class="rounded"> Estimable</label>
+              <label class="inline-flex items-center gap-2"><input type="checkbox" id="invS" class="rounded"> Pequeña</label>
+              <label class="inline-flex items-center gap-2"><input type="checkbox" id="invT" class="rounded"> Testeable</label>
+            </div>
+          </fieldset>
+
+          <div class="md:col-span-2 flex flex-wrap gap-3 pt-2 no-print">
+            <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700">Agregar historia</button>
+            <button type="reset" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200">Limpiar</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Tips -->
+    <aside class="space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+        <h3 class="font-semibold text-lg mb-3">📌 Formato recomendado</h3>
+        <p class="text-sm leading-relaxed">Como <strong>[tipo de usuario]</strong>, quiero <strong>[acción]</strong> para <strong>[beneficio]</strong>.</p>
+        <ul class="mt-3 text-sm list-disc list-inside space-y-1">
+          <li>Evita soluciones en la historia (describe la necesidad del usuario).</li>
+          <li>Agrega criterios de aceptación claros y medibles.</li>
+          <li>Divide historias grandes en historias pequeñas.</li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+        <h3 class="font-semibold text-lg mb-3">🧪 Criterios Dado/Cuando/Entonces</h3>
+        <pre class="text-xs bg-slate-50 p-3 rounded-xl overflow-x-auto">Dado que estoy autenticado
+Cuando agrego un vuelo al carrito
+Entonces veo el precio final actualizado</pre>
+      </div>
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+        <h3 class="font-semibold text-lg mb-3">💾 Persistencia</h3>
+        <p class="text-sm">Las historias se guardan en tu navegador (localStorage). Este lienzo inicia con el backlog vacío. Importa por <strong>drag & drop</strong>.</p>
+      </div>
+    </aside>
+
+    <!-- Backlog + dropzone y botones (exportar/vaciar) movidos aquí) -->
+    <section class="lg:col-span-3 -mt-2">
+      <div id="dropzone" class="no-print mb-3 rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 transition-colors p-4 text-center text-sm text-slate-600" title="Arrastra un archivo JSON con historias de usuario">
+        Arrastra y suelta aquí tu archivo <strong>.json</strong> con historias de usuario.
+      </div>
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+          <div>
+            <h3 class="text-xl font-semibold">Backlog de Historias de Usuario</h3>
+            <div class="text-xs text-slate-500">ID autogenerado (HU-001, HU-002...)</div>
+          </div>
+          <div class="flex items-center gap-2 no-print">
+            <button id="exportJSON" class="px-3 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 text-sm font-semibold" title="Exporta el backlog a JSON.">Exportar JSON</button>
+            <button id="clearAll" class="px-3 py-2 rounded-xl bg-rose-600 text-white hover:bg-rose-700 text-sm font-semibold" title="Vacía el backlog y borra datos locales.">Vaciar</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm" id="storiesTable">
+            <thead class="bg-slate-100">
+              <tr>
+                <th class="px-3 py-2 text-left">ID</th>
+                <th class="px-3 py-2 text-left">Historia</th>
+                <th class="px-3 py-2 text-left">Criterios de aceptación</th>
+                <th class="px-3 py-2 text-left">INVEST</th>
+                <th class="px-3 py-2 text-left">Prioridad</th>
+                <th class="px-3 py-2 text-left">Puntos</th>
+                <th class="px-3 py-2 text-left">Épica</th>
+                <th class="px-3 py-2 text-left">Estado</th>
+                <th class="px-3 py-2 text-left no-print">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <details class="no-print mt-4 bg-slate-100 rounded-xl p-4 text-sm">
+        <summary class="cursor-pointer font-semibold">🧪 Resultados de pruebas automáticas</summary>
+        <ul id="testResults" class="list-disc list-inside space-y-1 mt-2"></ul>
+      </details>
+    </section>
+  </main>
+
+  <footer class="max-w-7xl mx-auto px-4 pb-10 text-center text-xs text-slate-500">
+    Hecho con ♥ para prácticas de UX (Historias de Usuario, INVEST, Gherkin). Backlog inicial vacío.
+  </footer>
+
+  <script>
+(() => {
+  // ----- Estado y utilidades -----
+  const LS_KEY = 'ux_stories_v1';
+  /** @type {Array} */ let stories = [];
+  let nextId = 1;
+
+  const $ = (sel) => document.querySelector(sel);
+  const $$ = (sel) => document.querySelectorAll(sel);
+
+  const persona   = $('#persona');
+  const accion    = $('#accion');
+  const beneficio = $('#beneficio');
+  const criterios = $('#criterios');
+  const prioridad = $('#prioridad');
+  const puntos    = $('#puntos');
+  const epica     = $('#epica');
+  const estado    = $('#estado');
+
+  const invI = $('#invI'), invN = $('#invN'), invV = $('#invV');
+  const invE = $('#invE'), invS = $('#invS'), invT = $('#invT');
+
+  const tbody = $('#tbody');
+  const exportBtn = $('#exportJSON');
+  const clearAllBtn = $('#clearAll');
+  const printBtn = $('#printBtn');
+  const insertGWTBtn = $('#insertGWT');
+  const dropzone = $('#dropzone');
+  const testResults = $('#testResults');
+
+  function loadLS() {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      stories = raw ? JSON.parse(raw) : [];
+      const maxNum = stories
+        .map(s => parseInt((s.id || 'HU-000').split('-')[1], 10))
+        .filter(n => !isNaN(n));
+      nextId = maxNum.length ? Math.max(...maxNum) + 1 : 1;
+    } catch {
+      stories = [];
+      nextId = 1;
+    }
+  }
+
+  function saveLS() { localStorage.setItem(LS_KEY, JSON.stringify(stories)); }
+  function genId(n = nextId) { return `HU-${String(n).padStart(3, '0')}`; }
+
+  // ----- Render -----
+  function render() {
+    tbody.innerHTML = '';
+    for (const s of stories) {
+      const tr = document.createElement('tr');
+      tr.className = 'border-t border-slate-100';
+      tr.innerHTML = `
+        <td class="px-3 py-2 font-mono">${s.id}</td>
+        <td class="px-3 py-2">
+          Como <strong>${escapeHTML(s.persona)}</strong>,
+          quiero <strong>${escapeHTML(s.accion)}</strong>
+          para <strong>${escapeHTML(s.beneficio)}</strong>
+        </td>
+        <td class="px-3 py-2 whitespace-pre-wrap">${escapeHTML(s.criterios || '')}</td>
+        <td class="px-3 py-2">
+          ${['I','N','V','E','S','T'].map(k => s.invest?.[k] ? `<span class="inline-block text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 border border-emerald-200 mr-1">${k}</span>` : '').join('')}
+        </td>
+        <td class="px-3 py-2">${escapeHTML(s.prioridad || '')}</td>
+        <td class="px-3 py-2">${s.puntos ?? ''}</td>
+        <td class="px-3 py-2">${escapeHTML(s.epica || '')}</td>
+        <td class="px-3 py-2">${escapeHTML(s.estado || '')}</td>
+        <td class="px-3 py-2 no-print">
+          <button data-id="${s.id}" class="edit px-2 py-1 text-xs rounded bg-slate-100 hover:bg-slate-200">Editar</button>
+          <button data-id="${s.id}" class="del px-2 py-1 text-xs rounded bg-rose-100 hover:bg-rose-200">Eliminar</button>
+        </td>`;
+      tbody.appendChild(tr);
+    }
+  }
+
+  function escapeHTML(s) {
+    return (s ?? '').toString()
+      .replaceAll('&','&amp;')
+      .replaceAll('<','&lt;')
+      .replaceAll('>','&gt;')
+      .replaceAll('"','&quot;')
+      .replaceAll("'",'&#39;');
+  }
+
+  // ----- CRUD -----
+  function addStory(data) {
+    const id = genId();
+    nextId++;
+    stories.push({ id, ...data });
+    saveLS(); render(); runSmokeTests();
+  }
+  function deleteStory(id) {
+    stories = stories.filter(s => s.id !== id);
+    saveLS(); render(); runSmokeTests();
+  }
+  function editStory(id) {
+    const s = stories.find(x => x.id === id);
+    if (!s) return;
+    // Carga rápida al formulario
+    persona.value   = s.persona || '';
+    accion.value    = s.accion || '';
+    beneficio.value = s.beneficio || '';
+    criterios.value = s.criterios || '';
+    prioridad.value = s.prioridad || 'Obligatorio (Must Have)';
+    puntos.value    = s.puntos ?? '';
+    epica.value     = s.epica || '';
+    estado.value    = s.estado || 'Pendiente';
+    invI.checked = !!s.invest?.I; invN.checked = !!s.invest?.N; invV.checked = !!s.invest?.V;
+    invE.checked = !!s.invest?.E; invS.checked = !!s.invest?.S; invT.checked = !!s.invest?.T;
+
+    // Elimina y vuelve a crear al guardar
+    deleteStory(id);
+  }
+
+  // ----- Eventos UI -----
+  $('#storyForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!persona.value.trim() || !accion.value.trim() || !beneficio.value.trim()) return;
+
+    addStory({
+      persona: persona.value.trim(),
+      accion: accion.value.trim(),
+      beneficio: beneficio.value.trim(),
+      criterios: criterios.value.trim(),
+      prioridad: prioridad.value,
+      puntos: puntos.value ? Number(puntos.value) : null,
+      epica: epica.value.trim(),
+      estado: estado.value,
+      invest: { I: invI.checked, N: invN.checked, V: invV.checked, E: invE.checked, S: invS.checked, T: invT.checked }
+    });
+
+    e.target.reset();
+  });
+
+  tbody.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const id = btn.dataset.id;
+    if (btn.classList.contains('del')) deleteStory(id);
+    if (btn.classList.contains('edit')) editStory(id);
+  });
+
+  insertGWTBtn.addEventListener('click', () => {
+    const base = `Dado que \nCuando \nEntonces `;
+    criterios.value = criterios.value ? criterios.value + '\n' + base : base;
+    criterios.focus();
+  });
+
+  exportBtn.addEventListener('click', () => {
+    const data = JSON.stringify(stories, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'historias_usuario.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  clearAllBtn.addEventListener('click', () => {
+    if (!confirm('¿Vaciar backlog y borrar datos locales?')) return;
+    stories = []; nextId = 1; saveLS(); render(); runSmokeTests();
+  });
+
+  printBtn.addEventListener('click', () => window.print());
+
+  // Drag & drop (único método de importación)
+  ;['dragenter','dragover'].forEach(evt =>
+    dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.add('ring','ring-indigo-300'); })
+  );
+  ;['dragleave','drop'].forEach(evt =>
+    dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.remove('ring','ring-indigo-300'); })
+  );
+  dropzone.addEventListener('drop', async (e) => {
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type === 'application/json') await importFromFile(file);
+  });
+
+  async function importFromFile(file) {
+    try {
+      const text = await file.text();
+      const arr = JSON.parse(text);
+      if (!Array.isArray(arr)) throw new Error('JSON inválido: se esperaba un arreglo');
+      for (const item of arr) {
+        addStory({
+          persona: item.persona, accion: item.accion, beneficio: item.beneficio,
+          criterios: item.criterios, prioridad: item.prioridad, puntos: item.puntos,
+          epica: item.epica, estado: item.estado, invest: item.invest
+        });
+      }
+    } catch (err) {
+      alert('Error al importar JSON: ' + err.message);
+    }
+  }
+
+  // ----- Pruebas rápidas (smoke tests) -----
+  function runSmokeTests() {
+    if (!testResults) return;
+    const checks = [
+      { name: 'Tailwind cargó', pass: !!window.tailwind },
+      { name: 'Persistencia (localStorage)', pass: (()=>{ try { localStorage.setItem('__t','1'); localStorage.removeItem('__t'); return true; } catch { return false; } })() },
+      { name: 'Backlog visible', pass: tbody instanceof HTMLElement },
+      { name: 'Arrastrar & soltar activo', pass: dropzone instanceof HTMLElement }
+    ];
+    testResults.innerHTML = checks.map(c => `<li class="${c.pass?'text-emerald-700':'text-rose-700'}">• ${c.name}: ${c.pass?'OK':'FALLO'}</li>`).join('');
+  }
+
+  // ----- Inicio -----
+  loadLS();
+  render();
+  runSmokeTests();
+})();
+  </script>
+</body>
+</html>
