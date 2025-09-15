@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🗓️ Lienzo: Plantilla de Líneas de Tiempo (UX) — ajustada</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @media print { .no-print { display:none!important; } }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+  <!-- Header / Nav (se mantiene sólo la barra de navegación del toolkit) -->
+  <header class="bg-white/80 backdrop-blur sticky top-0 z-50 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="./index.html" class="flex items-center gap-3">
+        <span class="text-2xl">🧰</span>
+        <h1 class="text-xl md:text-2xl font-bold tracking-tight">UX Toolkit</h1>
+      </a>
+      <nav class="no-print">
+        <ul class="flex items-center gap-2 md:gap-3">
+          <li><a class="px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-100" href="./index.html">Inicio</a></li>
+          <li><a class="px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-100" href="./Plantilla Historias De Usuario.html">Historias</a></li>
+          <li><a class="px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-100" href="./Plantilla Lineas de Tiempo UX.html">Línea de tiempo</a></li>
+          <li><a class="px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-100" href="./Plantilla Viajes de Usuario.html">Viajes</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 grid lg:grid-cols-3 gap-6">
+    <!-- Título dentro de main + acción Imprimir -->
+    <section class="lg:col-span-3">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+          <h2 class="text-2xl md:text-3xl font-bold tracking-tight">🗓️ Plantilla de Líneas de Tiempo UX</h2>
+          <div class="flex gap-2 no-print">
+            <button id="printBtn" class="px-3 py-2 rounded-xl bg-slate-800 text-white hover:bg-black text-sm font-semibold" title="Imprime o guarda en PDF tu línea de tiempo">Imprimir</button>
+          </div>
+        </div>
+        <div class="px-5 py-4 text-sm text-slate-600">
+          <p>Define el <strong>título</strong> y la <strong>descripción</strong> de tu línea de tiempo, agrega <strong>eventos/hitos</strong> con su necesidad, emoción y pensamiento, y gestiona el <em>Backlog de eventos</em>. La importación es solo por <strong>arrastrar y soltar (.json)</strong>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Meta de la línea de tiempo (título/descripcion: se define una sola vez) -->
+    <section class="lg:col-span-3">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="px-5 py-4 border-b border-slate-200">
+          <h3 class="text-xl font-semibold">Información general (una sola vez)</h3>
+        </div>
+        <form id="metaForm" class="p-5 grid md:grid-cols-3 gap-4">
+          <div class="md:col-span-1">
+            <label for="titulo" class="block text-sm font-medium mb-1">Título de la línea de tiempo</label>
+            <input id="titulo" name="titulo" type="text" required placeholder="Ej: Onboarding en la app" class="w-full rounded-xl border-slate-300 focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div class="md:col-span-2">
+            <label for="descripcion" class="block text-sm font-medium mb-1">Descripción</label>
+            <input id="descripcion" name="descripcion" type="text" placeholder="Breve contexto del proceso o caso de uso" class="w-full rounded-xl border-slate-300 focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div class="md:col-span-3 flex flex-wrap gap-3 pt-2 no-print">
+            <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-700">Guardar título y descripción</button>
+            <button type="button" id="clearMeta" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200">Limpiar meta</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Formulario de eventos/hitos -->
+    <section class="lg:col-span-2">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+          <h3 class="text-xl font-semibold">Agregar / Editar Evento/Hito</h3>
+          <span id="editBadge" class="hidden text-xs px-2 py-1 rounded-lg bg-amber-100 text-amber-800">Modo edición activo</span>
+        </div>
+        <form id="timelineForm" class="p-5 grid md:grid-cols-2 gap-4">
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium mb-1" for="evento">Evento/Hito</label>
+            <input id="evento" name="evento" type="text" required placeholder="Ej: El usuario completa el registro" class="w-full rounded-xl border-slate-300 focus:ring-2 focus:ring-indigo-500" />
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium mb-1" for="necesidad">Necesidad</label>
+            <select id="necesidad" name="necesidad" class="w-full rounded-xl border-slate-300 focus:ring-2 focus:ring-indigo-500">
+              <option value="">Selecciona una necesidad…</option>
+              <option value="rapidez">Rapidez / eficiencia ⚡</option>
+              <option value="seguridad">Seguridad / confianza 🔒</option>
+              <option value="soporte">Soporte / acompañamiento 💬</option>
+              <option value="claridad">Claridad / simplicidad 📝</option>
+              <option value="accesibilidad">Accesibilidad / usabilidad 📱</option>
+              <option value="satisfaccion">Satisfacción / logro ✅</option>
+              <option value="ahorro">Ahorro / costo-beneficio 💰</option>
+              <option value="conectividad">Conectividad / disponibilidad 📶</option>
+              <option value="personalizacion">Personalización / adaptación 🎨</option>
+              <option value="control">Control / autonomía ⚙️</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1" for="pensamiento">Pensamiento 💭</label>
+            <input id="pensamiento" name="pensamiento" type="text" placeholder="¿Qué piensa en este hito?" class="w-full rounded-xl border-slate-300 focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1" for="emocion">Emoción</label>
+            <select id="emocion" name="emocion" class="w-full rounded-xl border-slate-300 focus:ring-2 focus:ring-indigo-500">
+              <option value="">Selecciona una emoción…</option>
+              <option value="satisfecho">🙂 Satisfecho / contento</option>
+              <option value="preocupado">😟 Preocupado / inseguro</option>
+              <option value="frustrado">😠 Frustrado / molesto</option>
+              <option value="encantado">😍 Encantado / muy feliz</option>
+              <option value="abrumado">🤯 Abrumado / confundido</option>
+              <option value="neutral">😐 Neutral / indiferente</option>
+              <option value="triste">😢 Triste / decepcionado</option>
+              <option value="irritado">😤 Irritado / impaciente</option>
+              <option value="confiado">😎 Confiado / seguro</option>
+              <option value="pensativo">🤔 Pensativo / evaluando</option>
+            </select>
+          </div>
+
+          <div class="md:col-span-2 flex flex-wrap gap-3 pt-2 no-print">
+            <button id="submitBtn" type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700">Agregar hito</button>
+            <button type="reset" id="resetBtn" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200">Limpiar</button>
+            <button type="button" id="cancelEdit" class="hidden px-4 py-2 rounded-xl bg-amber-100 text-amber-800 hover:bg-amber-200">Cancelar edición</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Tips -->
+    <aside class="space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+        <h3 class="font-semibold text-lg mb-3">📌 Consejos para Líneas de Tiempo UX</h3>
+        <ul class="text-sm list-disc list-inside space-y-1">
+          <li>Define un <strong>título y descripción</strong> claros.</li>
+          <li>Selecciona una <strong>necesidad</strong> principal por hito.</li>
+          <li>Usa <strong>emojis</strong> con descripción para comunicar la emoción.</li>
+          <li>Mantén cada hito en una sola acción visible.</li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+        <h3 class="font-semibold text-lg mb-3">💾 Guardado</h3>
+        <p class="text-sm">Todo se almacena en tu navegador (<code>localStorage</code>). La exportación incluye meta + eventos.</p>
+      </div>
+    </aside>
+
+    <!-- Visualizador -->
+    <section class="lg:col-span-3">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+        <h3 class="text-lg font-semibold">👀 Visualizador de Línea de Tiempo</h3>
+        <!-- Título/Descripción globales -->
+        <div id="metaView" class="mt-2"></div>
+        <div id="visualizer" class="mt-4 overflow-x-auto text-sm text-slate-500">Sin eventos para visualizar.</div>
+      </div>
+    </section>
+
+    <!-- Backlog + dropzone y botones (exportar/vaciar) movidos aquí) -->
+    <section class="lg:col-span-3">
+      <div id="dropzone" class="no-print mb-3 rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 transition-colors p-4 text-center text-sm text-slate-600" title="Arrastra un archivo JSON de línea de tiempo (meta + eventos)">
+        Arrastra y suelta aquí tu archivo <strong>.json</strong> (meta + eventos). 
+      </div>
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+          <div>
+            <h3 class="text-xl font-semibold">Backlog de eventos</h3>
+            <div id="metaBacklog" class="text-xs text-slate-600"></div>
+          </div>
+          <div class="flex items-center gap-2 no-print">
+            <button id="exportJSON" class="px-3 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 text-sm font-semibold" title="Exporta la línea de tiempo completa (meta + eventos)">Exportar JSON</button>
+            <button id="clearAll" class="px-3 py-2 rounded-xl bg-rose-600 text-white hover:bg-rose-700 text-sm font-semibold" title="Vacía la línea de tiempo (meta y eventos)">Vaciar</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm" id="timelineTable">
+            <thead class="bg-slate-100">
+              <tr>
+                <th class="px-3 py-2 text-left">ID</th>
+                <th class="px-3 py-2 text-left">Evento/Hito</th>
+                <th class="px-3 py-2 text-left">Necesidad</th>
+                <th class="px-3 py-2 text-left">💭 Pensamiento</th>
+                <th class="px-3 py-2 text-left">Emoción</th>
+                <th class="px-3 py-2 text-left no-print">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="max-w-7xl mx-auto px-4 pb-10 text-center text-xs text-slate-500">
+    Hecho con ♥ para prácticas de UX (líneas de tiempo). Backlog inicial vacío.
+  </footer>
+
+  <script>
+    // ===== Claves de almacenamiento =====
+    const KEY_STEPS = 'userTimelines';     // eventos (mantiene compat)
+    const KEY_META  = 'timelineMeta';      // { titulo, descripcion }
+
+    // ===== Referencias DOM =====
+    const form      = document.getElementById('timelineForm');
+    const metaForm  = document.getElementById('metaForm');
+    const tbody     = document.getElementById('tbody');
+    const VIS       = document.getElementById('visualizer');
+    const META_VIEW = document.getElementById('metaView');
+    const META_BKLG = document.getElementById('metaBacklog');
+    const submitBtn = document.getElementById('submitBtn');
+    const cancelEditBtn = document.getElementById('cancelEdit');
+    const editBadge = document.getElementById('editBadge');
+
+    // ===== Estado de edición =====
+    let CURRENT_EDIT_ID = null; // null = modo "agregar"
+
+    // ===== Utilidades =====
+    function nextId(){
+      const d = JSON.parse(localStorage.getItem(KEY_STEPS) || '[]');
+      return `LT-${String(d.length+1).padStart(3,'0')}`;
+    }
+    function escapeHtml(s){
+      return String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]));
+    }
+
+    // ===== Meta (una sola vez) =====
+    function saveMeta(meta){ localStorage.setItem(KEY_META, JSON.stringify(meta)); }
+    function loadMeta(){ return JSON.parse(localStorage.getItem(KEY_META) || 'null'); }
+    function renderMeta(){
+      const meta = loadMeta();
+      if(meta){
+        META_VIEW.innerHTML = `<div class='p-3 rounded-xl bg-slate-50 border border-slate-200'>
+          <div class='text-sm text-slate-500'>Título</div>
+          <h4 class='text-xl font-semibold'>${escapeHtml(meta.titulo)}</h4>
+          ${meta.descripcion?`<p class='text-sm mt-1'>${escapeHtml(meta.descripcion)}</p>`:''}
+        </div>`;
+        META_BKLG.innerHTML = `<span class='inline-flex items-center gap-2 px-2 py-1 rounded-lg bg-slate-100 border'>
+          <span class='text-slate-500'>Título:</span> <strong>${escapeHtml(meta.titulo)}</strong>
+        </span>${meta.descripcion?`<span class='ml-2 text-slate-500'>— ${escapeHtml(meta.descripcion)}</span>`:''}`;
+      } else {
+        META_VIEW.innerHTML = '';
+        META_BKLG.innerHTML = '<span class="text-slate-500">(Sin título ni descripción)</span>';
+      }
+    }
+
+    // ===== Acceso a eventos =====
+    function getSteps(){ return JSON.parse(localStorage.getItem(KEY_STEPS)||'[]'); }
+    function setSteps(steps){ localStorage.setItem(KEY_STEPS, JSON.stringify(steps)); }
+
+    // ===== Render tabla =====
+    function addRow(step){
+      const tr=document.createElement('tr');
+      tr.className='border-b border-slate-200';
+      tr.innerHTML=`<td class='px-3 py-2 font-semibold'>${step.id}</td>
+        <td class='px-3 py-2'>${escapeHtml(step.evento)}</td>
+        <td class='px-3 py-2'>${escapeHtml(step.necesidad||'')}</td>
+        <td class='px-3 py-2'>${step.pensamiento?`💭 ${escapeHtml(step.pensamiento)}`:''}</td>
+        <td class='px-3 py-2'>${escapeHtml(step.emocion||'')}</td>
+        <td class='px-3 py-2 no-print flex items-center gap-3'>
+          <button class='text-indigo-700 text-xs hover:underline' data-edit='${step.id}'>Editar</button>
+          <span class='text-slate-300'>|</span>
+          <button class='text-rose-700 text-xs hover:underline' data-delete='${step.id}'>Eliminar</button>
+        </td>`;
+      tbody.appendChild(tr);
+    }
+
+    function loadFromStorage(){
+      // Compat: versiones antiguas con array 'necesidades'
+      let d=(JSON.parse(localStorage.getItem(KEY_STEPS)||'[]')).map(x=>{
+        if(!x.necesidad && Array.isArray(x.necesidades) && x.necesidades.length){
+          x.necesidad = x.necesidades[0];
+        }
+        return x;
+      });
+      tbody.innerHTML='';
+      d.forEach(addRow);
+      // Persistimos si hubo migración
+      setSteps(d);
+    }
+
+    // ===== Visualizador =====
+    function renderVisual(){
+      const d=getSteps();
+      if(!d.length){ VIS.innerHTML='<div class="text-sm text-slate-500">Sin eventos para visualizar.</div>'; return; }
+
+      const cards = d.map((s,i)=>{
+        const center = `<div class='text-center'>
+            <div class='flex items-center justify-center gap-2 text-xs text-slate-500'>
+              <span class='inline-flex items-center justify-center w-6 h-6 rounded-full bg-indigo-600 text-white font-medium'>${i+1}</span>
+              Hito
+            </div>
+            <h4 class='mt-1 font-semibold'>${escapeHtml(s.evento)}</h4>
+          </div>`;
+        const bottom = (s.necesidad || s.emocion || s.pensamiento) ? `
+          <div class='mt-2 text-center text-sm space-y-1'>
+            ${s.necesidad?`<div><span class='inline-flex items-center gap-1 px-2 py-1 rounded-full border bg-white'>${escapeHtml(s.necesidad)}</span></div>`:''}
+            <div>
+              ${s.emocion?`<span class='text-lg align-middle'>${escapeHtml(s.emocion)}</span>`:''}
+              ${s.pensamiento?`<span class='ml-2 align-middle'>💭 ${escapeHtml(s.pensamiento)}</span>`:''}
+            </div>
+          </div>` : '';
+        return `
+          <div class='flex items-stretch'>
+            <div class='w-72 bg-white border border-slate-200 rounded-xl p-4 shadow-sm'>
+              ${center}
+              ${bottom}
+            </div>
+            ${i<d.length-1?`<div class="mx-2 text-slate-400 self-center">→</div>`:''}
+          </div>`;
+      }).join('');
+
+      VIS.innerHTML = `<div class='min-w-max flex items-center gap-3'>${cards}</div>`;
+    }
+
+    // ===== CRUD de eventos =====
+    function createStep(step){
+      const d=getSteps();
+      d.push(step);
+      setSteps(d);
+    }
+
+    function updateStep(id, partial){
+      const d=getSteps();
+      const idx=d.findIndex(x=>x.id===id);
+      if(idx>-1){ d[idx] = {...d[idx], ...partial}; setSteps(d); }
+    }
+
+    function removeById(id){
+      const d=getSteps().filter(x=>x.id!==id);
+      setSteps(d);
+      loadFromStorage();
+    }
+
+    // ===== Modo edición =====
+    function enterEditMode(step){
+      CURRENT_EDIT_ID = step.id;
+      form.evento.value = step.evento || '';
+      form.necesidad.value = step.necesidad || '';
+      form.pensamiento.value = step.pensamiento || '';
+      form.emocion.value = step.emocion || '';
+      submitBtn.textContent = 'Guardar cambios';
+      submitBtn.classList.remove('bg-indigo-600','hover:bg-indigo-700');
+      submitBtn.classList.add('bg-emerald-600','hover:bg-emerald-700');
+      cancelEditBtn.classList.remove('hidden');
+      editBadge.classList.remove('hidden');
+      form.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    function exitEditMode(){
+      CURRENT_EDIT_ID = null;
+      form.reset();
+      submitBtn.textContent = 'Agregar hito';
+      submitBtn.classList.remove('bg-emerald-600','hover:bg-emerald-700');
+      submitBtn.classList.add('bg-indigo-600','hover:bg-indigo-700');
+      cancelEditBtn.classList.add('hidden');
+      editBadge.classList.add('hidden');
+    }
+
+    // ===== Eventos (Meta) =====
+    metaForm.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const meta = { titulo: metaForm.titulo.value.trim(), descripcion: metaForm.descripcion.value.trim() };
+      if(!meta.titulo){ alert('Completa el título'); return; }
+      saveMeta(meta);
+      renderMeta();
+      metaForm.reset();
+    });
+    document.getElementById('clearMeta').addEventListener('click', ()=>{ localStorage.removeItem(KEY_META); renderMeta(); });
+
+    // ===== Eventos (Eventos/Hitos) =====
+    form.addEventListener('submit', e=>{
+      e.preventDefault();
+      const payload={
+        evento: form.evento.value.trim(),
+        necesidad: form.necesidad.value,
+        pensamiento: form.pensamiento.value.trim(),
+        emocion: form.emocion.value
+      };
+      if(!payload.evento){ alert('Completa el Evento/Hito'); return; }
+
+      if(CURRENT_EDIT_ID){
+        updateStep(CURRENT_EDIT_ID, payload);
+        loadFromStorage();
+        renderVisual();
+        exitEditMode();
+      } else {
+        const step={ id: nextId(), ...payload };
+        createStep(step);
+        addRow(step);
+        renderVisual();
+        form.reset();
+      }
+    });
+
+    cancelEditBtn.addEventListener('click', ()=> exitEditMode());
+
+    // Delegación: Editar / Eliminar desde la tabla
+    tbody.addEventListener('click', e=>{
+      const editId = e.target.getAttribute('data-edit');
+      const delId  = e.target.getAttribute('data-delete');
+      if(editId){
+        const step = getSteps().find(x=>x.id===editId);
+        if(step) enterEditMode(step);
+      } else if(delId){
+        if(confirm('¿Eliminar '+delId+'?')){ removeById(delId); renderVisual(); if(CURRENT_EDIT_ID===delId) exitEditMode(); }
+      }
+    });
+
+    // ===== Exportar / Vaciar (movidos al Backlog) =====
+    document.getElementById('exportJSON').addEventListener('click',()=>{
+      const steps = getSteps();
+      const meta  = loadMeta();
+      if(!steps.length && !meta) return alert('Nada que exportar');
+      const payload = { meta: meta||{}, steps };
+      const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');
+      a.href=url; a.download='linea_tiempo.json'; a.click();
+      setTimeout(()=>URL.revokeObjectURL(url),500);
+    });
+
+    document.getElementById('clearAll').addEventListener('click',()=>{
+      if(confirm('¿Vaciar título/descr. y todos los eventos?')){
+        localStorage.removeItem(KEY_META);
+        localStorage.removeItem(KEY_STEPS);
+        renderMeta(); loadFromStorage(); renderVisual();
+        exitEditMode();
+      }
+    });
+
+    // --- Importación solo por Drag & Drop ---
+    async function importFromFile(file) {
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        let steps = [];
+        let meta  = null;
+        if (Array.isArray(data)) {
+          steps = data;
+        } else if (data && typeof data === 'object') {
+          steps = Array.isArray(data.steps) ? data.steps : [];
+          meta  = data.meta || null;
+        } else {
+          return alert('Formato no reconocido');
+        }
+        // Migración: "necesidades" (array) -> "necesidad" (string)
+        steps = steps.map(x => {
+          if (!x.necesidad && Array.isArray(x.necesidades) && x.necesidades.length) {
+            x.necesidad = x.necesidades[0];
+          }
+          return x;
+        });
+        setSteps(steps);
+        if (meta) saveMeta(meta); else localStorage.removeItem(KEY_META);
+        loadFromStorage();
+        renderMeta();
+        renderVisual();
+      } catch (err) {
+        alert('Error al importar JSON: ' + err.message);
+      }
+    }
+
+    const dropzone = document.getElementById('dropzone');
+    ['dragenter','dragover','dragleave','drop'].forEach(evt => {
+      dropzone.addEventListener(evt, e => e.preventDefault());
+      document.body.addEventListener(evt, e => e.preventDefault());
+    });
+    ['dragenter','dragover'].forEach(evt => {
+      dropzone.addEventListener(evt, () => {
+        dropzone.classList.add('ring', 'ring-indigo-300', 'bg-white');
+      });
+    });
+    ['dragleave','drop'].forEach(evt => {
+      dropzone.addEventListener(evt, () => {
+        dropzone.classList.remove('ring', 'ring-indigo-300', 'bg-white');
+      });
+    });
+    dropzone.addEventListener('drop', async (e) => {
+      const file = e.dataTransfer?.files?.[0];
+      if (!file) return;
+      if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
+        return alert('Por favor suelta un archivo .json');
+      }
+      await importFromFile(file);
+    });
+
+    // Imprimir
+    document.getElementById('printBtn').addEventListener('click',()=>window.print());
+
+    // ===== Inicio =====
+    renderMeta();
+    loadFromStorage();
+    renderVisual();
+  </script>
+</body>
+</html>
