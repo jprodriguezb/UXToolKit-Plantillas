@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UX Toolkit · Index</title>
+  <meta name="description" content="Página principal de las plantillas de UX: Historias de Usuario, Líneas de Tiempo y Viajes de Usuario. Explicación de objetivos y navegación." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @media print { .no-print { display:none!important; } }
+    .card:hover{ transform: translateY(-2px); }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+  <!-- Header / Nav -->
+  <header class="bg-white/80 backdrop-blur sticky top-0 z-50 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="./index.html" class="flex items-center gap-3">
+        <span class="text-2xl">🧰</span>
+        <h1 class="text-xl md:text-2xl font-bold tracking-tight">UX Toolkit</h1>
+      </a>
+      <nav class="no-print">
+        <ul class="flex items-center gap-2 md:gap-3">
+          <li><a class="px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-100" href="./index.html">Inicio</a></li>
+          <li><a class="px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-100" href="./Plantilla Historias De Usuario.html">Historias</a></li>
+          <li><a class="px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-100" href="./Plantilla Lineas de Tiempo UX.html">Línea de tiempo</a></li>
+          <li><a class="px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-100" href="./Plantilla Viajes de Usuario.html">Viajes</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="bg-gradient-to-b from-white to-slate-50">
+    <div class="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-5 gap-6 items-center">
+      <div class="md:col-span-3">
+        <p class="text-sm uppercase tracking-widest text-slate-500">Diseño de Experiencias de Usuario</p>
+        <h2 class="mt-2 text-3xl md:text-4xl font-extrabold leading-tight">Tres plantillas, un flujo completo de UX</h2>
+        <p class="mt-3 text-slate-600">Este índice te guía para trabajar de forma articulada: primero redacta <strong>Historias de Usuario</strong>, luego mapea el proceso con una <strong>Línea de Tiempo</strong> y finalmente integra todo en un <strong>Viaje de Usuario</strong> con fases, touchpoints y recorrido emocional.</p>
+        <div class="mt-5 flex flex-wrap gap-3 no-print">
+          <a class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700" href="./Plantilla Historias De Usuario.html">Empezar con Historias</a>
+          <a class="px-4 py-2 rounded-xl bg-slate-800 text-white font-semibold hover:bg-black" href="#como-usar">Ver cómo usar</a>
+        </div>
+      </div>
+      <aside class="md:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+        <h3 class="font-semibold text-lg">🎯 Objetivo del Toolkit</h3>
+        <p class="mt-2 text-sm leading-relaxed">Ofrecer plantillas prácticas, listas para clase o taller, que <em>persisten en el navegador</em> (localStorage) y permiten <strong>importar/exportar JSON</strong> para evidencias, iteraciones y co‑diseño.</p>
+        <ul class="mt-3 text-sm list-disc list-inside space-y-1 text-slate-700">
+          <li>Estándares claros (INVEST, Gherkin, fases/touchpoints).</li>
+          <li>Visualizadores integrados para conversar sobre la experiencia.</li>
+          <li>Impresión rápida para PDFs u hojas de evidencia.</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Cards -->
+  <main class="max-w-7xl mx-auto px-4 pb-10 grid md:grid-cols-3 gap-6">
+    <!-- Historias de Usuario -->
+    <article class="card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden transition-transform">
+      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+        <h3 class="text-lg font-semibold">🧩 Historias de Usuario</h3>
+        <span class="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-600">INVEST</span>
+      </div>
+      <div class="p-5 text-sm leading-relaxed text-slate-700">
+        <p>Redacta historias desde la necesidad, define criterios <em>Dado/Cuando/Entonces</em> y prioriza con MoSCoW. Tabla con IDs HU‑### y acciones de edición.</p>
+        <ul class="mt-3 list-disc list-inside space-y-1">
+          <li>Importar/Exportar JSON</li>
+          <li>Backlog vacío por defecto</li>
+          <li>Impresión/PDF</li>
+        </ul>
+      </div>
+      <div class="px-5 pb-5 flex gap-2 no-print">
+        <a class="px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700" href="./Plantilla Historias De Usuario.html">Abrir plantilla</a>
+        <a class="px-3 py-2 rounded-xl text-sm bg-slate-100 hover:bg-slate-200" href="#como-usar">Ver uso</a>
+      </div>
+    </article>
+
+    <!-- Línea de Tiempo -->
+    <article class="card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden transition-transform">
+      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+        <h3 class="text-lg font-semibold">🗓️ Línea de Tiempo UX</h3>
+        <span class="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-600">Edición in‑place</span>
+      </div>
+      <div class="p-5 text-sm leading-relaxed text-slate-700">
+        <p>Define un título y agrega hitos con <strong>Necesidad</strong>, <strong>Emoción</strong> y <strong>Pensamiento</strong>. Visualizador con tarjetas y flechas para el flujo.</p>
+        <ul class="mt-3 list-disc list-inside space-y-1">
+          <li>Importar/Exportar JSON (meta + pasos)</li>
+          <li>Editar/Eliminar con ID LT‑###</li>
+          <li>Impresión/PDF</li>
+        </ul>
+      </div>
+      <div class="px-5 pb-5 flex gap-2 no-print">
+        <a class="px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700" href="./Plantilla Lineas de Tiempo UX.html">Abrir plantilla</a>
+        <a class="px-3 py-2 rounded-xl text-sm bg-slate-100 hover:bg-slate-200" href="#como-usar">Ver uso</a>
+      </div>
+    </article>
+
+    <!-- Viajes de Usuario -->
+    <article class="card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden transition-transform">
+      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+        <h3 class="text-lg font-semibold">🧭 Viajes de Usuario UX</h3>
+        <span class="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-600">Fases dinámicas</span>
+      </div>
+      <div class="p-5 text-sm leading-relaxed text-slate-700">
+        <p>Crea etapas por <strong>Fase</strong> con <em>Touchpoint</em>, <em>Sensaciones</em> y un recorrido emocional por hitos (evento, necesidad, emoción, 💭).</p>
+        <ul class="mt-3 list-disc list-inside space-y-1">
+          <li>Importar/Exportar JSON</li>
+          <li>Visualización por columnas de fase</li>
+          <li>Impresión/PDF</li>
+        </ul>
+      </div>
+      <div class="px-5 pb-5 flex gap-2 no-print">
+        <a class="px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700" href="./Plantilla Viajes de Usuario.html">Abrir plantilla</a>
+        <a class="px-3 py-2 rounded-xl text-sm bg-slate-100 hover:bg-slate-200" href="#como-usar">Ver uso</a>
+      </div>
+    </article>
+  </main>
+
+  <!-- Cómo usar -->
+  <section id="como-usar" class="bg-white border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-2 gap-8">
+      <div>
+        <h3 class="text-xl font-semibold">🧭 Flujo recomendado</h3>
+        <ol class="mt-3 list-decimal list-inside space-y-2 text-slate-700 text-sm">
+          <li>Redacta 3–5 <strong>Historias de Usuario</strong> clave (INVEST + criterios).</li>
+          <li>Convierte una historia prioritaria en <strong>Línea de Tiempo</strong> (hitos con necesidad/emoción/pensamiento).</li>
+          <li>Integra las interacciones y <strong>Viajes de Usuario</strong> por fases y touchpoints.</li>
+          <li>Exporta JSON en cada plantilla como evidencia y compártelo con tu equipo o en clase.</li>
+        </ol>
+      </div>
+      <div>
+        <h3 class="text-xl font-semibold">💾 Persistencia & Privacidad</h3>
+        <p class="mt-3 text-sm text-slate-700">Los datos se guardan localmente en tu navegador (<code>localStorage</code>). Si cambias de equipo o navegador, usa <em>Exportar JSON</em> para portarlos y <em>Importar JSON</em> para continuar.</p>
+        <div class="mt-4 p-4 rounded-xl bg-slate-50 border border-slate-200 text-sm">
+          <strong>Tip:</strong> Imprime en PDF para anexar a informes o a tu LMS.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-500">
+    UX Toolkit — Hecho con ♥ para prácticas de UX (Historias, Líneas de Tiempo, Viajes). <br/>
+    Creado por: <strong>Universidad Técnica Nacional</strong> · Curso <em>Diseño de Experiencias de Usuario (ITI‑332)</em>【27†source】
+  </footer>
+</body>
+</html>
